@@ -1,50 +1,24 @@
+// Requires
 require('./config/config');
-const express = require('express')
-const bodyParser = require('body-parser')
+const mongoose = require('mongoose');
+const express = require('express');
+const app = express();
+app.use(require('./controller/usuario'));
 
-// Express 
-const app = express()
+// Me conecto a la base de datos de MongoDB
+mongoose.connect(process.env.URLDB, {
+  	useNewUrlParser: true,
+  	useUnifiedTopology: true,
+  	useFindAndModify: false,
+  	useCreateIndex: true
+}, (error, respuesta) => {
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
- 
-// parse application/json
-app.use(bodyParser.json())
+	if (error) throw error;
 
-// Escucho peticiones del tipo GET (recuperar datos)
-app.get('/usuario', function (req, res) {
-  	res.json('GET usuario')
-})
+	console.log("Base de datos ONLINE");
+});
 
-// Escucho peticiones del tipo POST (insertar datos)
-app.post('/usuario', function (req, res) {
-	let body = req.body;
-
-	if (body.nombre === undefined) {
-		res.status(400).json({
-			ok: false,
-			mensaje: `El campo 'nombre' del usuario no fue informado`
-		});
-	}
-
-  	res.json({
-  		persona: body
-  	});
-})
-
-// Escucho peticiones del tipo PUT (actualizar datos)
-app.put('/usuario/:id', function (req, res) {
-	let id = req.params.id;
-  	res.json({
-  		id,
-  	});
-})
-
-// Escucho peticiones del tipo DELETE (baja lógica)
-app.delete('/usuario', function (req, res) {
-  	res.json('DELETE usuario')
-})
- 
+// Me congo a la escucha en el puerto para recibir peticiones
 app.listen(process.env.PORT, () => {
 	console.log(`Escuchando en el puerto: ${ process.env.PORT }`);
 })
