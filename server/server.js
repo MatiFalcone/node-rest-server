@@ -2,8 +2,17 @@
 require('./config/config');
 const mongoose = require('mongoose');
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
-app.use(require('./controller/usuario'));
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+ 
+// parse application/json
+app.use(bodyParser.json());
+
+// Configuracion global de rutas
+app.use(require('./controller/index'));
 
 // Me conecto a la base de datos de MongoDB
 mongoose.connect(process.env.URLDB, {
