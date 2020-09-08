@@ -3,6 +3,7 @@ require('./config/config');
 const mongoose = require('mongoose');
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 const app = express();
 
 // parse application/x-www-form-urlencoded
@@ -13,6 +14,9 @@ app.use(bodyParser.json());
 
 // Configuracion global de rutas
 app.use(require('./controller/index'));
+
+// Habilitar la carpeta "public" para que pueda ser accedida desde cualquier lado
+app.use(express.static(path.resolve(__dirname, '../public')));
 
 // Me conecto a la base de datos de MongoDB
 mongoose.connect(process.env.URLDB, {
